@@ -1,13 +1,15 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
+import java.io.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.EtchedBorder;
 
 public class MainFrame extends JFrame implements ActionListener {
      JButton loadButton; 
+      JLabel fileNamefield ;
     public void initialize(){
 /* 
        
@@ -38,15 +40,10 @@ setTitle("Form1");
         
 
         JPanel displayPanel=new JPanel();
-        //setting the panel layout as null
+        
         loadPanel.setLayout(null);
 
         displayPanel.setLayout(null);
-        //adding a label element to the panel
-        
-       // JLabel label=new JLabel("File Name");
-
-        //JLabel label3=new JLabel("ID");
 
         //-----
         loadButton = new JButton("Load File");
@@ -54,8 +51,9 @@ setTitle("Form1");
         loadButton.addActionListener(this);
 
         JLabel fileName = new JLabel("File Name") ;
-       JTextField fileNamefield = new JTextField();
-       fileNamefield.setEditable(false); 
+        fileNamefield = new JLabel("");
+       fileNamefield.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+       //fileNamefield.setEditable(false); 
 
        JLabel Id = new JLabel("ID:") ;
        JTextField IDfield = new JTextField();
@@ -151,10 +149,42 @@ setTitle("Form1");
             int res = file_load.showOpenDialog(null);
             if (res== JFileChooser.APPROVE_OPTION){
                 File file_path = new File(file_load.getSelectedFile().getAbsolutePath());
+                String name = file_path.toString() ;
+                fileNamefield = new JLabel(name);
                 System.out.println(file_path);
-                //----------------------------------
+                System.out.println(name);
+                //
+                FileReadingExample(name);
+            //----------------------------------
+
             }
         }
     }
     
+
+   public void FileReadingExample (String filePath){
+    try {
+            // Provide the path of the file you want to read
+            //String filePath = "path/to/your/file.txt";
+
+            // Create a FileReader object
+            FileReader fileReader = new FileReader(filePath);
+
+            // Wrap FileReader in BufferedReader for efficient reading
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                // Process each line of the file here
+                System.out.println(line);
+            }
+
+            // Close the resources
+            bufferedReader.close();
+            fileReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 }
+}
+
